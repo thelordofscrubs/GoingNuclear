@@ -8,9 +8,10 @@ public partial class Root2d : Node2D
 	{
 		// Instantiate Main Menu on game load
 		PackedScene mainMenuScenePacked = GD.Load<PackedScene>("res://MainMenu/MainMenu.tscn");
-		var mainMenuScene = mainMenuScenePacked.Instantiate();
+		var mainMenuScene = mainMenuScenePacked.Instantiate<Control>();
 		AddChild(mainMenuScene);
-		GD.Print(mainMenuScene.position);
+		Vector2 windowSize = DisplayServer.WindowGetSize();
+		mainMenuScene.Size = windowSize;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
