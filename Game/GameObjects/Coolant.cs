@@ -13,36 +13,45 @@ public class Coolant {
     // Kilograms per second
     public double FlowSpeed = 0;
 
-    // Bar
-    public double PressureInReactor;
+    // Kilograms
+    public double TotalCoolantMass = 200 * 1000;
 
     // Bar
-    public double ReactorInletPressure;
+    public double PressureInReactor;
 
     public CoolantType coolantType;
 
     public Coolant(double ambientTemp, double normalPressure, string coolantType = "water") {
         Temperature = ambientTemp;
         PressureInReactor = normalPressure;
-        ReactorInletPressure = normalPressure;
         this.coolantType = CoolantTypes[coolantType];
     }
 
+    public void ReduceEnergy(double JoulesReduced) {
+        double temperatureChange = JoulesReduced / (TotalCoolantMass * coolantType.HeatCapacity);
+        Temperature -= temperatureChange;
+    }
+
+    public void IncreaseEnergy(double JoulesAdded) {
+        double temperatureChange = JoulesAdded / (TotalCoolantMass * coolantType.HeatCapacity);
+        Temperature += temperatureChange;
+    }
+
     public static Dictionary<string, CoolantType> CoolantTypes = new Dictionary<string, CoolantType>{
-        {"water" , new CoolantType(4.186, 373.15, 273.15, "Water")}
+        {"water" , new CoolantType(4186, 373.15, 273.15, "Water")}
     };
 
     public class CoolantType {
-        // Specific heat capacity (Joules per gram*C)
-        public double HeatCapacity;
+        // Specific heat capacity (Joules per Kilogram * Kelvin)
+        public readonly double HeatCapacity;
 
         // Kelvin
-        public double BoilingPoint;
+        public readonly double BoilingPoint;
         
         // Kelvin
-        public double FreezingPoint;
+        public readonly double FreezingPoint;
 
-        public string DisplayName;
+        public readonly string DisplayName;
         
         public CoolantType(double heatCapacity, double boilingPoint, double freezingPoint, string name) {
             HeatCapacity = heatCapacity;
