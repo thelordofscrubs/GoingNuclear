@@ -32,7 +32,7 @@ public partial class MainGame : Node2D
 
 	private void meltdown() {
 		GD.Print("Meltdown triggered");
-		
+		QueueFree();
 	}
 
 	// Called in _Process as a high level game loop function

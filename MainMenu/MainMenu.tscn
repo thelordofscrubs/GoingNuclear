@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://chqk50wa3e0ht"]
+[gd_scene load_steps=3 format=3 uid="uid://chqk50wa3e0ht"]
+
+[ext_resource type="Script" path="res://MainMenu/MainMenu.cs" id="1_mhxuc"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_qwdye"]
 font_size = 50
@@ -10,6 +12,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 1000.0
 offset_bottom = 500.0
+script = ExtResource("1_mhxuc")
 
 [node name="PlayButton" type="Button" parent="."]
 z_index = 1

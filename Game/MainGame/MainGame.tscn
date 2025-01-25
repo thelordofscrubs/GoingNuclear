@@ -1,3 +1,23 @@
-[gd_scene format=3 uid="uid://rpdxyn7qb5db"]
+[gd_scene load_steps=4 format=3 uid="uid://rpdxyn7qb5db"]
+
+[ext_resource type="SpriteFrames" uid="uid://dymiwyyburmi1" path="res://new_sprite_frames.tres" id="1_6j52t"]
+[ext_resource type="Script" path="res://Game/MainGame/Player.cs" id="2_but0o"]
+[ext_resource type="Texture2D" uid="uid://dcbq3ye1t1y0k" path="res://tempBackground.webp" id="2_kgfoa"]
 
 [node name="MainGame" type="Node2D"]
+
+[node name="Player" type="AnimatedSprite2D" parent="."]
+z_index = 1
+position = Vector2(662, 318)
+scale = Vector2(0.5, 0.5)
+sprite_frames = ExtResource("1_6j52t")
+animation = &"Idle"
+autoplay = "Idle"
+script = ExtResource("2_but0o")
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+position_smoothing_enabled = true
+
+[node name="TempBackground" type="Sprite2D" parent="."]
+position = Vector2(527, 518)
+texture = ExtResource("2_kgfoa")
