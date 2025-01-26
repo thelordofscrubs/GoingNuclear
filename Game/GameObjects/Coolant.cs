@@ -14,7 +14,7 @@ public class Coolant {
     public double FlowSpeed = 0;
 
     // Kilograms
-    public double TotalCoolantMass = 200 * 1000;
+    public double TotalCoolantMass = 10000;
 
     // Bar
     public double PressureInReactor;

@@ -24,6 +24,6 @@ public class CoolantPumps {
     }
 
     public void Degrade(double delta) {
-        RepairLevel -= 0.005 * delta;
+        //RepairLevel -= 0.005 * delta;
     }
 }

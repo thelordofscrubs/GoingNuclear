@@ -4,12 +4,12 @@ using Godot;
 namespace GameObjects;
 public class TurbineBay {
 
-    public int TurbineCount = 3;
+    public int TurbineCount = 5;
 
-    public double TotalHeatCapacity { get => HeatCapacityPerTurbine * TurbineCount; }
+    public double TotalHeatCapacity { get => EnergyCapacityPerTurbine * TurbineCount; }
 
-    // Kelvin per second
-    public double HeatCapacityPerTurbine = 200;
+    // Watts
+    public double EnergyCapacityPerTurbine = 200 * 1000 * 1000;
 
     public double AmbientTemperature;
 
@@ -22,12 +22,20 @@ public class TurbineBay {
         this.coolant = coolant;
     }
 
-    // Returns watts generated this tick
+    // Returns Joules generated this tick
     public double GameTick(double delta) {
         // Heat dissipated is limited by both the coolant's capacity and the reactor's heat capacity
         double temperatureDifference = coolant.Temperature - AmbientTemperature;
+        if (temperatureDifference <= 0) {
+            return 0;
+        }
+
+        // Define a "smooth threshold" for dissipation
+        double effectiveTemperatureDifference = Math.Max(temperatureDifference - 0.5, 0) * 0.3;
+
+        // Calculate max dissipation and coolant dissipation
         double maxDissipation = TotalHeatCapacity * delta; // Total system heat limit
-        double coolantDissipation = coolant.FlowSpeed * coolant.coolantType.HeatCapacity * temperatureDifference * delta;
+        double coolantDissipation = coolant.FlowSpeed * coolant.coolantType.HeatCapacity * effectiveTemperatureDifference * delta;
 
         // Actual heat dissipated is the smaller of these two limits
         double heatDissipated = Math.Min(coolantDissipation, maxDissipation);
@@ -38,13 +46,13 @@ public class TurbineBay {
         // Convert dissipated heat to electrical power, modulated by repair level
         double powerOutput = heatDissipated * RepairLevel;
 
-        // Return the power generated in Watts
+        // Return the power generated in Joules
         return powerOutput;
     }
 
     public void Degrade(double delta) {
         // Degenerate the repair level
-        RepairLevel -= 0.01 * delta;
+        //RepairLevel -= 0.001 * delta;
     }
 
 }

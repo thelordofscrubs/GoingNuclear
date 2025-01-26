@@ -35,8 +35,9 @@ public partial class Root2d : Node2D
 
 	public void StartGame() {
 		LeaveMainMenu();
-		var GameScene = mainGameScenePacked.Instantiate<Node2D>();
-		AddChild(GameScene);
+		var GameScene = mainGameScenePacked.Instantiate<MainGame>();
+		GameScene.EndGame = EndGame;
+		AddChild(GameScene);		
 	}
 
 	public void EndGame() {
