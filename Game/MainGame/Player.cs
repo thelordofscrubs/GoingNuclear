@@ -18,13 +18,13 @@ public partial class Player : AnimatedSprite2D
         Vector2 velocity = Vector2.Zero;
 
         // Input handling
-        if (Input.IsActionPressed("ui_up"))
+        if (Input.IsActionPressed("move_up"))
             velocity.Y -= 1;
-        if (Input.IsActionPressed("ui_down"))
+        if (Input.IsActionPressed("move_down"))
             velocity.Y += 1;
-        if (Input.IsActionPressed("ui_left"))
+        if (Input.IsActionPressed("move_left"))
             velocity.X -= 1;
-        if (Input.IsActionPressed("ui_right"))
+        if (Input.IsActionPressed("move_right"))
             velocity.X += 1;
 
         // Normalize to avoid faster diagonal movement, then apply speed
@@ -36,6 +36,13 @@ public partial class Player : AnimatedSprite2D
 
 		}
 		Position += velocity;
-        
+
+		// Interaction handler
+		if (Input.IsActionJustPressed("interact"))
+        {
+            EmitSignal(SignalName.InteractionAttempted);
+        }
 	}
+
+	[Signal] public delegate void InteractionAttemptedEventHandler();
 }

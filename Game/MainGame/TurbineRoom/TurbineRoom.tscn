@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://11w74x51xvjs"]
+
+[ext_resource type="Texture2D" uid="uid://b1pc78tbf82hm" path="res://Game/MainGame/TurbineRoom/BackgroundTemp.webp" id="1_uef7i"]
+
+[node name="TurbineRoom" type="Sprite2D"]
+texture = ExtResource("1_uef7i")

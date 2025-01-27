@@ -15,6 +15,8 @@ public class TurbineBay {
 
     public double RepairLevel = 1.0;
 
+    public double TurbineEfficiency = 2.5;
+
     public Coolant coolant;
 
     public TurbineBay(double ambientTemp, Coolant coolant) {
@@ -31,7 +33,7 @@ public class TurbineBay {
         }
 
         // Define a "smooth threshold" for dissipation
-        double effectiveTemperatureDifference = Math.Max(temperatureDifference - 0.5, 0) * 0.3;
+        double effectiveTemperatureDifference = Math.Max(temperatureDifference - 10, 0) * 0.3;
 
         // Calculate max dissipation and coolant dissipation
         double maxDissipation = TotalHeatCapacity * delta; // Total system heat limit
@@ -43,8 +45,8 @@ public class TurbineBay {
         // Update coolant temperature
         coolant.ReduceEnergy(heatDissipated);
 
-        // Convert dissipated heat to electrical power, modulated by repair level
-        double powerOutput = heatDissipated * RepairLevel;
+        // Convert dissipated heat to electrical power, modulated by repair level and efficiency
+        double powerOutput = heatDissipated * RepairLevel * TurbineEfficiency;
 
         // Return the power generated in Joules
         return powerOutput;

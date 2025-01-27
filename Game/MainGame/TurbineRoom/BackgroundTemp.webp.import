@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dcbq3ye1t1y0k"
-path="res://.godot/imported/tempBackground.webp-e9d005c006085b88611be0d1cdb7cf05.ctex"
+uid="uid://b1pc78tbf82hm"
+path="res://.godot/imported/BackgroundTemp.webp-1ca143bf8d8db5199e71d6d829fdfb5b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://tempBackground.webp"
-dest_files=["res://.godot/imported/tempBackground.webp-e9d005c006085b88611be0d1cdb7cf05.ctex"]
+source_file="res://Game/MainGame/TurbineRoom/BackgroundTemp.webp"
+dest_files=["res://.godot/imported/BackgroundTemp.webp-1ca143bf8d8db5199e71d6d829fdfb5b.ctex"]
 
 [params]
 

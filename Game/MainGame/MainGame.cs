@@ -4,6 +4,7 @@ using GameObjects;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Helper;
 
 public partial class MainGame : Node2D
 {
@@ -13,11 +14,9 @@ public partial class MainGame : Node2D
 
 	public Queue<double> Last5EnergyTicks = new Queue<double>( new double[10]);
 
-	public Label CoreTempLabel;
-	public Label CoolantTempLabel;
-	public Label WattageLabel;
-	public Label FuelLevelLabel;
-	public Label ControlRodDepthLabel;
+	public Dictionary<string, PackedScene> packedScenes = new Dictionary<string, PackedScene>();
+
+	public DebugLabelManager debugLabels;
 
 	public Button RaiseControlRodsButton;
 	public Button LowerControlRodsButton;
@@ -32,21 +31,33 @@ public partial class MainGame : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		reactor = new NuclearReactor(meltdown);
-		CoreTempLabel = GetNode<Label>("TempBackground/ReactorCoreTempLabel/DisplayValue");
-		CoolantTempLabel = GetNode<Label>("TempBackground/CoolantTempLabel/DisplayValue");
-		WattageLabel = GetNode<Label>("TempBackground/WattageLabel/DisplayValue");
-		FuelLevelLabel = GetNode<Label>("TempBackground/FuelFreshnessLabel/DisplayValue");
-		ControlRodDepthLabel = GetNode<Label>("TempBackground/ControlRodDepthLabel/DisplayValue");
+		// Load all game scenes into memory
+		packedScenes.Add("ControlRoom", GD.Load<PackedScene>("res://Game/MainGame/ControlRoom/ControlRoom.tscn"));
+		packedScenes.Add("TurbineRoom", GD.Load<PackedScene>("res://Game/MainGame/TurbineRoom/TurbineRoom.tscn"));
+		packedScenes.Add("Player", GD.Load<PackedScene>("res://Game/MainGame/Player.tscn"));
+		packedScenes.Add("DebugLabels", GD.Load<PackedScene>("res://Game/MainGame/DebugLabels.tscn"));
 
-		RaiseControlRodsButton = GetNode<Button>("TempBackground/RaiseControlRodsButton");
+		// Start in the control room
+		var controlRoomScene = packedScenes["ControlRoom"].Instantiate();
+		AddChild(controlRoomScene);
+		var playerScene = packedScenes["Player"].Instantiate();
+		AddChild(playerScene);
+		var debugLabelsScene = packedScenes["DebugLabels"].Instantiate();
+		AddChild(debugLabelsScene);
+		
+		reactor = new NuclearReactor(meltdown);
+		debugLabels = new DebugLabelManager(GetNode("DebugLabels"));
+
+		RaiseControlRodsButton = GetNode<Button>("BackgroundImage/RaiseControlRodsButton");
 		RaiseControlRodsButton.ButtonDown += () => {reactor.ControlRodState = 1;};
 		RaiseControlRodsButton.ButtonUp += () => {reactor.ControlRodState = 0;};
-		LowerControlRodsButton = GetNode<Button>("TempBackground/LowerControlRodsButton");
+		LowerControlRodsButton = GetNode<Button>("BackgroundImage/LowerControlRodsButton");
 		LowerControlRodsButton.ButtonDown += () => {reactor.ControlRodState = -1;};
 		LowerControlRodsButton.ButtonUp += () => {reactor.ControlRodState = 0;};
 
 		GD.Print("Main Game script is ready");
+		GD.Print(GetTreeStringPretty());
+		
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -67,11 +78,11 @@ public partial class MainGame : Node2D
 		TotalEnergyGenerated += energyGenerated;
 
 		// Set label values
-		CoreTempLabel.Text = $"{(reactor.CoreTemperature - 273.15):F4} Degrees Celsius";		
-		CoolantTempLabel.Text = $"{(reactor.coolant.Temperature - 273.15):F4} Degrees Celsius";
-		WattageLabel.Text = $"{energyGenerated/delta/1000000:F3} Megawatts";
-		FuelLevelLabel.Text = $"{reactor.FuelFreshness:P}";
-		ControlRodDepthLabel.Text = $"{reactor.ControlRodDepth:P}";
+		debugLabels.UpdateLabel("ReactorCoreTempLabel", $"Reactor Core Temperature: {reactor.CoreTemperature - 273.15:F4} Degrees Celsius");		
+		debugLabels.UpdateLabel("CoolantTempLabel", $"Coolant Temperature: {reactor.coolant.Temperature - 273.15:F4} Degrees Celsius");
+		debugLabels.UpdateLabel("WattageLabel", $"Current Generation: {energyGenerated/delta/1000000:F3} Megawatts");
+		debugLabels.UpdateLabel("FuelLevelLabel", $"Fuel Level: {reactor.FuelFreshness:P}");
+		debugLabels.UpdateLabel("ControlRodDepthLabel", $"Control Rod Depth: {reactor.ControlRodDepth:P}");
 	}
 
 }

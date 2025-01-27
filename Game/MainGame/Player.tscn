@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://b7uhqg2bq4flh"]
+
+[ext_resource type="SpriteFrames" uid="uid://dymiwyyburmi1" path="res://new_sprite_frames.tres" id="1_kexm1"]
+[ext_resource type="Script" path="res://Game/MainGame/Player.cs" id="2_0wvlm"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_l4dec"]
+
+[node name="Player" type="AnimatedSprite2D"]
+z_index = 1
+scale = Vector2(0.5, 0.5)
+sprite_frames = ExtResource("1_kexm1")
+animation = &"Idle"
+autoplay = "Idle"
+script = ExtResource("2_0wvlm")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
+
+[node name="PlayerCollision" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerCollision"]
+position = Vector2(-0.449951, -0.389999)
+scale = Vector2(4.26, 4.26)
+shape = SubResource("CapsuleShape2D_l4dec")

@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://c6e20bc7mbke"]
+
+[node name="DebugLabels" type="CanvasLayer"]
+layer = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ReactorCoreTempLabel" type="Label" parent="VBoxContainer"]
+z_index = 4
+layout_mode = 2
+text = "Reactor Core Temperature"
+
+[node name="CoolantTempLabel" type="Label" parent="VBoxContainer"]
+z_index = 4
+layout_mode = 2
+text = "Coolant Temperature"
+
+[node name="WattageLabel" type="Label" parent="VBoxContainer"]
+z_index = 4
+layout_mode = 2
+text = "Current Generation"
+
+[node name="FuelLevelLabel" type="Label" parent="VBoxContainer"]
+z_index = 4
+layout_mode = 2
+text = "Fuel Freshness"
+
+[node name="ControlRodDepthLabel" type="Label" parent="VBoxContainer"]
+z_index = 4
+layout_mode = 2
+text = "Control Rod Depth"
