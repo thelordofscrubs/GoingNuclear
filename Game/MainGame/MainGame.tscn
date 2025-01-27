@@ -1,9 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://rpdxyn7qb5db"]
+[gd_scene load_steps=8 format=3 uid="uid://rpdxyn7qb5db"]
 
 [ext_resource type="SpriteFrames" uid="uid://dymiwyyburmi1" path="res://new_sprite_frames.tres" id="1_6j52t"]
 [ext_resource type="Script" path="res://Game/MainGame/MainGame.cs" id="1_7h4v2"]
 [ext_resource type="Script" path="res://Game/MainGame/Player.cs" id="2_but0o"]
 [ext_resource type="Texture2D" uid="uid://dcbq3ye1t1y0k" path="res://tempBackground.webp" id="2_kgfoa"]
+[ext_resource type="Script" path="res://Game/MainGame/EastDoor.cs" id="5_xcty2"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_l4dec"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mvfnu"]
 
 [node name="MainGame" type="Node2D"]
 script = ExtResource("1_7h4v2")
@@ -19,6 +24,13 @@ script = ExtResource("2_but0o")
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 position_smoothing_enabled = true
+
+[node name="PlayerCollision" type="Area2D" parent="Player"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/PlayerCollision"]
+position = Vector2(-0.449951, -0.389999)
+scale = Vector2(4.26, 4.26)
+shape = SubResource("CapsuleShape2D_l4dec")
 
 [node name="TempBackground" type="Sprite2D" parent="."]
 position = Vector2(527, 518)
@@ -112,3 +124,19 @@ offset_left = 64.0
 offset_top = 24.0
 offset_right = 104.0
 offset_bottom = 47.0
+
+[node name="ColorRect" type="ColorRect" parent="TempBackground"]
+offset_left = 420.0
+offset_top = -3.0
+offset_right = 470.315
+offset_bottom = 37.0
+color = Color(0.176471, 1, 1, 1)
+
+[node name="EastDoor" type="Area2D" parent="TempBackground"]
+position = Vector2(442, 15)
+script = ExtResource("5_xcty2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TempBackground/EastDoor"]
+position = Vector2(-1, 2)
+scale = Vector2(2.575, 2.575)
+shape = SubResource("CircleShape2D_mvfnu")
