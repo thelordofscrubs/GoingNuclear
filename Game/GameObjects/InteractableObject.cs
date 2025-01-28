@@ -12,8 +12,9 @@ public partial class InteractableObject : Node2D
 
     private void OnBodyEntered(Node body)
     {
-        if (body is Player player)
+        if (body.Name == "PlayerCollision")
         {
+            Player player = body.GetParent<Player>();
             _playerInRange = true;
             player.InteractionAttempted += OnInteractionAttempted;
         }
@@ -21,8 +22,9 @@ public partial class InteractableObject : Node2D
 
     private void OnBodyExited(Node body)
     {
-        if (body is Player player)
+        if (body.Name == "PlayerCollision")
         {
+            Player player = body.GetParent<Player>();
             _playerInRange = false;
             player.InteractionAttempted -= OnInteractionAttempted;
         }

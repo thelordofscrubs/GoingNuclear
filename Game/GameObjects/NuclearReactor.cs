@@ -39,8 +39,8 @@ public class NuclearReactor {
     }
 
     // Returns watts generated this tick
-    public double GameTick(double delta) {        
-                
+    public double GameTick(double delta) {
+
         adjustControlRodPosition(delta);
 
         coolant.FlowSpeed = coolantPumps.CurrentCoolantFlowCapacity;

@@ -6,7 +6,6 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_mvfnu"]
 
 [node name="BackgroundImage" type="Sprite2D"]
-position = Vector2(527, 518)
 texture = ExtResource("1_gc4vy")
 
 [node name="RaiseControlRodsButton" type="Button" parent="."]
