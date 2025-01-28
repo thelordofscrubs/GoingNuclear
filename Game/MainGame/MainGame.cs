@@ -23,6 +23,9 @@ public partial class MainGame : Node2D
 
 	public Action EndGame = () => {};
 
+	public Node CurrentScene;
+	public Player Player;
+
 	public double DisplayWattage() {
 		if (Last5EnergyTicks.Count == 0) return 0;
 		return Last5EnergyTicks.Sum()/Last5EnergyTicks.Count; 
@@ -40,8 +43,10 @@ public partial class MainGame : Node2D
 		// Start in the control room
 		var controlRoomScene = packedScenes["ControlRoom"].Instantiate();
 		AddChild(controlRoomScene);
-		var playerScene = packedScenes["Player"].Instantiate();
+		CurrentScene = controlRoomScene;		
+		var playerScene = packedScenes["Player"].Instantiate<Player>();
 		AddChild(playerScene);
+		Player = playerScene;
 		var debugLabelsScene = packedScenes["DebugLabels"].Instantiate();
 		AddChild(debugLabelsScene);
 		
@@ -56,8 +61,25 @@ public partial class MainGame : Node2D
 		LowerControlRodsButton.ButtonUp += () => {reactor.ControlRodState = 0;};
 
 		GD.Print("Main Game script is ready");
-		GD.Print(GetTreeStringPretty());
 		
+	}
+
+	public void SwitchScenes(string newScene, string nodeToTeleportTo = null) {
+		if (!packedScenes.ContainsKey(newScene)) {
+			GD.PrintErr($"Invalid scene argument in SwitchScenes! {newScene}");
+			return;
+		}
+		
+		if (CurrentScene != null) CurrentScene.QueueFree();
+		var newLoadedScene = packedScenes[newScene].Instantiate();
+		AddChild(newLoadedScene);
+
+		CurrentScene = newLoadedScene;
+
+		if (nodeToTeleportTo != null) {
+			var node = newLoadedScene.GetNode<Node2D>(nodeToTeleportTo);
+			Player.Position = node.Position;
+		}
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

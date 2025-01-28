@@ -6,8 +6,9 @@ public partial class InteractableObject : Node2D
 
     public override void _Ready()
     {
-        GetNode<Area2D>("Area2D").BodyEntered += OnBodyEntered;
-        GetNode<Area2D>("Area2D").BodyExited += OnBodyExited;
+        Area2D childArea = GetNode<Area2D>("Area2D");
+        childArea.AreaEntered += OnBodyEntered;
+        childArea.AreaExited += OnBodyExited;
     }
 
     private void OnBodyEntered(Node body)
