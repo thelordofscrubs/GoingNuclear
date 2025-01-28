@@ -1,6 +1,6 @@
 using Godot;
 
-public partial class DoorArea : InteractableObject
+public partial class EastDoor : InteractableObject
 {
 
     MainGame mainGame;
