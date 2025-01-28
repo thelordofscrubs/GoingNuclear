@@ -8,7 +8,7 @@ using Helper;
 
 public partial class MainGame : Node2D
 {
-	NuclearReactor reactor;
+	public NuclearReactor Reactor;
 
 	public double TotalEnergyGenerated = 0;
 
@@ -34,6 +34,8 @@ public partial class MainGame : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		Reactor = new NuclearReactor(meltdown);
+
 		// Load all game scenes into memory
 		packedScenes.Add("ControlRoom", GD.Load<PackedScene>("res://Game/MainGame/ControlRoom/ControlRoom.tscn"));
 		packedScenes.Add("TurbineRoom", GD.Load<PackedScene>("res://Game/MainGame/TurbineRoom/TurbineRoom.tscn"));
@@ -47,18 +49,13 @@ public partial class MainGame : Node2D
 		var playerScene = packedScenes["Player"].Instantiate<Player>();
 		AddChild(playerScene);
 		Player = playerScene;
+		var playerSpawnNode = controlRoomScene.GetNode<Node2D>("InitialPlayerSpawn");
+		Player.Position = playerSpawnNode.Position;
 		var debugLabelsScene = packedScenes["DebugLabels"].Instantiate();
 		AddChild(debugLabelsScene);
 		
-		reactor = new NuclearReactor(meltdown);
+		
 		debugLabels = new DebugLabelManager(GetNode("DebugLabels"));
-
-		RaiseControlRodsButton = GetNode<Button>("BackgroundImage/RaiseControlRodsButton");
-		RaiseControlRodsButton.ButtonDown += () => {reactor.ControlRodState = 1;};
-		RaiseControlRodsButton.ButtonUp += () => {reactor.ControlRodState = 0;};
-		LowerControlRodsButton = GetNode<Button>("BackgroundImage/LowerControlRodsButton");
-		LowerControlRodsButton.ButtonDown += () => {reactor.ControlRodState = -1;};
-		LowerControlRodsButton.ButtonUp += () => {reactor.ControlRodState = 0;};
 
 		GD.Print("Main Game script is ready");
 		
@@ -95,16 +92,17 @@ public partial class MainGame : Node2D
 
 	// Called in _Process as a high level game loop function
 	private void gameTick(double delta) {
-		reactor.Degrade(delta);
-		double energyGenerated = reactor.GameTick(delta);
+		Reactor.Degrade(delta);
+		double energyGenerated = Reactor.GameTick(delta);
 		TotalEnergyGenerated += energyGenerated;
 
 		// Set label values
-		debugLabels.UpdateLabel("ReactorCoreTempLabel", $"Reactor Core Temperature: {reactor.CoreTemperature - 273.15:F4} Degrees Celsius");		
-		debugLabels.UpdateLabel("CoolantTempLabel", $"Coolant Temperature: {reactor.coolant.Temperature - 273.15:F4} Degrees Celsius");
+		debugLabels.UpdateLabel("ReactorCoreTempLabel", $"Reactor Core Temperature: {Reactor.CoreTemperature - 273.15:F4} Degrees Celsius");		
+		debugLabels.UpdateLabel("CoolantTempLabel", $"Coolant Temperature: {Reactor.coolant.Temperature - 273.15:F4} Degrees Celsius");
 		debugLabels.UpdateLabel("WattageLabel", $"Current Generation: {energyGenerated/delta/1000000:F3} Megawatts");
-		debugLabels.UpdateLabel("FuelLevelLabel", $"Fuel Level: {reactor.FuelFreshness:P}");
-		debugLabels.UpdateLabel("ControlRodDepthLabel", $"Control Rod Depth: {reactor.ControlRodDepth:P}");
+		debugLabels.UpdateLabel("FuelLevelLabel", $"Fuel Level: {Reactor.FuelFreshness:P}");
+		debugLabels.UpdateLabel("ControlRodDepthLabel", $"Control Rod Depth: {Reactor.ControlRodDepth:P}");
+		debugLabels.UpdateLabel("TurbineRepairLabel", $"Turbine Repair Level: {Reactor.turbineBay.RepairLevel:P}");
 	}
 
 }

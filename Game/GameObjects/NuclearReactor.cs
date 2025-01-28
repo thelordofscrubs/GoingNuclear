@@ -18,7 +18,7 @@ public class NuclearReactor {
     public int FuelRodCount = 10;
     public int ControlRodCount = 10;
 
-    public double ControlRodDepth = 0.8;
+    public double ControlRodDepth = 0.65;
 
     // 1 is ascending, 0 is stationary, -1 is descending
     public int ControlRodState = 0;
@@ -59,14 +59,19 @@ public class NuclearReactor {
     }
 
     public void Degrade(double delta) {
-        FuelFreshness -= 0.0001 * delta;
+        ChangeFuelFreshness(-0.0001 * delta);
         turbineBay.Degrade(delta);
         coolantPumps.Degrade(delta);
     }
 
     private void adjustControlRodPosition (double delta) {
-        ControlRodDepth = Math.Clamp(ControlRodDepth + 0.05 * delta * ControlRodState, 0, 1.0);
-        
+        if (ControlRodState != 0) {
+            ControlRodDepth = Math.Clamp(ControlRodDepth + 0.05 * delta * ControlRodState, 0, 1.0);
+        }
+    }
+
+    public void ChangeFuelFreshness (double changeAmount) {
+        FuelFreshness = Math.Clamp(FuelFreshness + changeAmount, 0, 1.0);
     }
 
     private void TransferHeatToCoolant(double delta) {

@@ -31,3 +31,8 @@ text = "Fuel Freshness"
 z_index = 4
 layout_mode = 2
 text = "Control Rod Depth"
+
+[node name="TurbineRepairLabel" type="Label" parent="VBoxContainer"]
+z_index = 4
+layout_mode = 2
+text = "Turbine Repair"

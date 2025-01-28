@@ -15,7 +15,6 @@ public partial class InteractableObject : Node2D
     {
         if (body.Name == "PlayerCollision")
         {
-            GD.Print("Player Entered");
             Player player = body.GetParent<Player>();
             _playerInRange = true;
             player.InteractionAttempted += OnInteractionAttempted;
