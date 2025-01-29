@@ -19,12 +19,11 @@ public partial class MainGame : Node2D
 	public DebugLabelManager debugLabels;
 
 	public Button RaiseControlRodsButton;
-	public Button LowerControlRodsButton;
-
-	public Action EndGame = () => {};
+	public Button LowerControlRodsButton;	
 
 	public Node CurrentScene;
 	public Player PlayerRef;
+	public bool MeltdownOccured = false;
 
 	public double DisplayWattage() {
 		if (Last5EnergyTicks.Count == 0) return 0;
@@ -90,8 +89,7 @@ public partial class MainGame : Node2D
 	}
 
 	private void meltdown() {
-		GD.Print("Meltdown triggered");
-		EndGame();
+		MeltdownOccured = true;
 	}
 
 	// Called in _Process as a high level game loop function

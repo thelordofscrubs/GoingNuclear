@@ -4,14 +4,16 @@ using System;
 public partial class Root2d : Node2D
 {
 	PackedScene mainMenuScenePacked;
-	PackedScene mainGameScenePacked;
+	PackedScene gameControllerScenePacked;
 	
+	GameController GameScene;
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		// Instantiate Main Menu on game load
 		mainMenuScenePacked = GD.Load<PackedScene>("res://MainMenu/MainMenu.tscn");
-		mainGameScenePacked = GD.Load<PackedScene>("res://Game/MainGame/MainGame.tscn");
+		gameControllerScenePacked = GD.Load<PackedScene>("res://Game/GameController.tscn");
 		GoToMainMenu();	
 	}
 
@@ -35,17 +37,13 @@ public partial class Root2d : Node2D
 
 	public void StartGame() {
 		LeaveMainMenu();
-		var GameScene = mainGameScenePacked.Instantiate<MainGame>();
+		GameScene = gameControllerScenePacked.Instantiate<GameController>();
 		GameScene.EndGame = EndGame;
 		AddChild(GameScene);		
 	}
 
 	public void EndGame() {
-
-	}
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
+		GameScene.QueueFree();
+		GoToMainMenu();
 	}
 }
