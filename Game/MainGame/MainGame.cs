@@ -24,7 +24,7 @@ public partial class MainGame : Node2D
 	public Action EndGame = () => {};
 
 	public Node CurrentScene;
-	public Player Player;
+	public Player PlayerRef;
 
 	public double DisplayWattage() {
 		if (Last5EnergyTicks.Count == 0) return 0;
@@ -41,6 +41,7 @@ public partial class MainGame : Node2D
 		packedScenes.Add("TurbineRoom", GD.Load<PackedScene>("res://Game/MainGame/TurbineRoom/TurbineRoom.tscn"));
 		packedScenes.Add("Player", GD.Load<PackedScene>("res://Game/MainGame/Player.tscn"));
 		packedScenes.Add("DebugLabels", GD.Load<PackedScene>("res://Game/MainGame/DebugLabels.tscn"));
+		packedScenes.Add("UserInterface", GD.Load<PackedScene>("res://Game/MainGame/UserInterface.tscn"));
 
 		// Start in the control room
 		var controlRoomScene = packedScenes["ControlRoom"].Instantiate();
@@ -48,11 +49,14 @@ public partial class MainGame : Node2D
 		CurrentScene = controlRoomScene;		
 		var playerScene = packedScenes["Player"].Instantiate<Player>();
 		AddChild(playerScene);
-		Player = playerScene;
+		PlayerRef = playerScene;
 		var playerSpawnNode = controlRoomScene.GetNode<Node2D>("InitialPlayerSpawn");
-		Player.Position = playerSpawnNode.Position;
+		PlayerRef.Position = playerSpawnNode.Position;
 		var debugLabelsScene = packedScenes["DebugLabels"].Instantiate();
 		AddChild(debugLabelsScene);
+		var uiScene = packedScenes["UserInterface"].Instantiate();
+		AddChild(uiScene);
+		PlayerRef.UserInterfaceNode = uiScene;
 		
 		
 		debugLabels = new DebugLabelManager(GetNode("DebugLabels"));
@@ -75,7 +79,7 @@ public partial class MainGame : Node2D
 
 		if (nodeToTeleportTo != null) {
 			var node = newLoadedScene.GetNode<Node2D>(nodeToTeleportTo);
-			Player.Position = node.Position;
+			PlayerRef.Position = node.Position;
 		}
 	}
 
@@ -103,6 +107,7 @@ public partial class MainGame : Node2D
 		debugLabels.UpdateLabel("FuelLevelLabel", $"Fuel Level: {Reactor.FuelFreshness:P}");
 		debugLabels.UpdateLabel("ControlRodDepthLabel", $"Control Rod Depth: {Reactor.ControlRodDepth:P}");
 		debugLabels.UpdateLabel("TurbineRepairLabel", $"Turbine Repair Level: {Reactor.turbineBay.RepairLevel:P}");
+		debugLabels.UpdateLabel("RunCooldownLabel", $"Run Cooldown: {PlayerRef.RunCooldown:F2}");
 	}
 
 }

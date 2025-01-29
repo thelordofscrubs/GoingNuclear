@@ -10,11 +10,42 @@ public partial class Player : AnimatedSprite2D
 	public double RunEnergyUsedPerSecond = 0.1;
 	public double RunEnergyRechargeRate = 0.1;
 	public float RunSpeedMultiplier = 1.5f;
-
 	public double RunCooldown = 0.0;
+	public bool CurrentlyRunning = false;
 
 	public void ChangeRunEnergy(double changeAmount) {
 		RunEnergy = Math.Clamp(RunEnergy + changeAmount, 0.0, 1.0);
+		UserInterfaceNode.GetNode<ProgressBar>("Control/VBoxContainer/ProgressBar").Value = RunEnergy;
+	}
+
+	public Node UserInterfaceNode;
+
+	private void determineRun(double delta) {
+		if (Input.IsActionPressed("sprint")) {
+			if (RunCooldown > 0) {
+				RunCooldown = Math.Max(RunCooldown, 1.5);
+				CurrentlyRunning = false;
+				return;
+			}
+			if (RunEnergy == 0) {
+				RunCooldown = 3.0;
+				CurrentlyRunning = false;
+				return;
+			}
+			CurrentlyRunning = true;			
+		} else {
+			// Sprint is not currently pressed
+			if (CurrentlyRunning == true) {
+				RunCooldown = Math.Max(RunCooldown, 1.5);
+				CurrentlyRunning = false;
+				return;
+			}
+			if (RunCooldown > 0) {
+				RunCooldown = Math.Max(0.0, RunCooldown - delta);
+				return;
+			}
+			ChangeRunEnergy(RunEnergyRechargeRate*delta);
+		}			
 	}
 
 	// Called when the node enters the scene tree for the first time.
@@ -26,14 +57,11 @@ public partial class Player : AnimatedSprite2D
 	public override void _Process(double delta)
 	{
 		float currentSpeed = WalkingSpeed;
-		if (Input.IsActionPressed("sprint")) {
-			if (RunEnergy == 0 || RunCooldown > 0.0) {
-				RunCooldown = 2.0;
-			} else {
-				currentSpeed *= RunSpeedMultiplier;
-			}
 
-			
+		determineRun(delta);
+		if (CurrentlyRunning) {
+			currentSpeed *= RunSpeedMultiplier;
+			ChangeRunEnergy(-RunEnergyUsedPerSecond * delta);
 		}
 
 		// Movement vector

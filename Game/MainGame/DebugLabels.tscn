@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://cy0y4e3fk85tt"]
+[gd_scene format=3 uid="uid://c6e20bc7mbke"]
 
 [node name="DebugLabels" type="CanvasLayer"]
 layer = 10
@@ -36,3 +36,8 @@ text = "Control Rod Depth"
 z_index = 4
 layout_mode = 2
 text = "Turbine Repair"
+
+[node name="RunCooldownLabel" type="Label" parent="VBoxContainer"]
+z_index = 4
+layout_mode = 2
+text = "Run CD"

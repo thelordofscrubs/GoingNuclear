@@ -71,6 +71,7 @@ offset_bottom = 22.0
 color = Color(0.176471, 0.329412, 1, 1)
 
 [node name="Label" type="Label" parent="RetractRodsButton/ColorRect"]
+layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 text = "Retract
