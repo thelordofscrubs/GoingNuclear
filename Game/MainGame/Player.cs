@@ -8,6 +8,7 @@ public partial class Player : AnimatedSprite2D
 
 	public double RunEnergy = 1.0;
 	public double RunEnergyUsedPerSecond = 0.1;
+	public double RunEnergyRechargeRate = 0.1;
 	public float RunSpeedMultiplier = 1.5f;
 
 	public double RunCooldown = 0.0;
@@ -26,11 +27,13 @@ public partial class Player : AnimatedSprite2D
 	{
 		float currentSpeed = WalkingSpeed;
 		if (Input.IsActionPressed("sprint")) {
-			if (RunEnergy == 0) {
+			if (RunEnergy == 0 || RunCooldown > 0.0) {
 				RunCooldown = 2.0;
+			} else {
+				currentSpeed *= RunSpeedMultiplier;
 			}
+
 			
-			currentSpeed *= RunSpeedMultiplier;
 		}
 
 		// Movement vector
