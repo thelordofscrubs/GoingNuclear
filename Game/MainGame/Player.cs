@@ -9,7 +9,7 @@ public partial class Player : AnimatedSprite2D
 	public double RunEnergy = 1.0;
 	public double RunEnergyUsedPerSecond = 0.1;
 	public double RunEnergyRechargeRate = 0.1;
-	public float RunSpeedMultiplier = 1.5f;
+	public float RunSpeedMultiplier = 2f;
 	public double RunCooldown = 0.0;
 	public bool CurrentlyRunning = false;
 
@@ -61,7 +61,7 @@ public partial class Player : AnimatedSprite2D
 		determineRun(delta);
 		if (CurrentlyRunning) {
 			currentSpeed *= RunSpeedMultiplier;
-			ChangeRunEnergy(-RunEnergyUsedPerSecond * delta);
+			
 		}
 
 		// Movement vector
@@ -81,6 +81,9 @@ public partial class Player : AnimatedSprite2D
         velocity = velocity.Normalized() * currentSpeed * (float)delta;
 		if (velocity.LengthSquared() > 0) {
 			Play("Walking");
+            if (CurrentlyRunning) {
+                ChangeRunEnergy(-RunEnergyUsedPerSecond * delta);
+            }
 		} else {
 			Play("Idle");
 

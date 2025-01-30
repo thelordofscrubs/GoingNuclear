@@ -1,50 +1,60 @@
-[gd_scene load_steps=7 format=3 uid="uid://b6tsccx01k0ht"]
+[gd_scene load_steps=8 format=3 uid="uid://b6tsccx01k0ht"]
 
 [ext_resource type="Texture2D" uid="uid://qxjk7l6oh0p6" path="res://Game/MainGame/ControlRoom/Background.png" id="1_c8vd4"]
-[ext_resource type="Script" path="res://Game/MainGame/ControlRoom/TurbineRoomDoor.cs" id="2_f72v5"]
+[ext_resource type="PackedScene" uid="uid://b05ji1c6rajf" path="res://Game/MainGame/Interactables/InGameButton.tscn" id="3_soqm1"]
 [ext_resource type="Script" path="res://Game/MainGame/ControlRoom/InsertRodsButton.cs" id="3_v3onr"]
+[ext_resource type="PackedScene" uid="uid://glt2sm21afo8" path="res://Game/MainGame/Interactables/Door.tscn" id="4_36aqc"]
 [ext_resource type="Script" path="res://Game/MainGame/ControlRoom/RetractRodsButton.cs" id="4_awkou"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nuf7e"]
-radius = 19.66
-height = 222.2
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mximi"]
+radius = 29.14
+height = 259.25
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_mvfnu"]
-radius = 38.98
+[sub_resource type="CircleShape2D" id="CircleShape2D_6eqiu"]
+resource_local_to_scene = true
+radius = 29.3
 
 [node name="BackgroundImage" type="Sprite2D"]
 texture = ExtResource("1_c8vd4")
 
-[node name="TurbineRoomDoor" type="Node2D" parent="."]
-position = Vector2(482, 345)
-script = ExtResource("2_f72v5")
-
-[node name="Area2D" type="Area2D" parent="TurbineRoomDoor"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="TurbineRoomDoor/Area2D"]
-shape = SubResource("CapsuleShape2D_nuf7e")
-
 [node name="InitialPlayerSpawn" type="Node2D" parent="."]
 position = Vector2(6, -204)
 
-[node name="InsertRodsButton" type="Node2D" parent="."]
-position = Vector2(-253, -113)
-script = ExtResource("3_v3onr")
+[node name="TurbineRoomDoor" parent="." instance=ExtResource("4_36aqc")]
+position = Vector2(488, 336)
+shape = SubResource("CapsuleShape2D_mximi")
+Destination = "TurbineRoom"
+DestinationNode = "ControlRoomDoor"
 
-[node name="Area2D" type="Area2D" parent="InsertRodsButton"]
+[node name="ReactorRoomDoor" parent="." instance=ExtResource("4_36aqc")]
+position = Vector2(-487, 340)
+shape = SubResource("CapsuleShape2D_mximi")
+Destination = "ReactorRoom"
+DestinationNode = "ControlRoomDoor"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="InsertRodsButton/Area2D"]
-position = Vector2(-3, 69)
-shape = SubResource("CircleShape2D_mvfnu")
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = -133.0
+offset_top = -205.0
+offset_right = -83.0
+offset_bottom = -165.0
+color = Color(0.176471, 0.329412, 1, 1)
 
-[node name="ColorRect" type="ColorRect" parent="InsertRodsButton"]
-offset_left = -24.0
-offset_top = -18.0
-offset_right = 26.0
-offset_bottom = 22.0
-color = Color(0.176471, 0.262745, 1, 1)
+[node name="Label" type="Label" parent="ColorRect"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Retract
+Rods"
+horizontal_alignment = 1
 
-[node name="Label" type="Label" parent="InsertRodsButton/ColorRect"]
+[node name="ColorRect2" type="ColorRect" parent="."]
+offset_left = -282.0
+offset_top = -131.0
+offset_right = -232.0
+offset_bottom = -91.0
+color = Color(0.176471, 0.329412, 1, 1)
+
+[node name="Label" type="Label" parent="ColorRect2"]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
@@ -52,27 +62,12 @@ text = "Insert
 Rods"
 horizontal_alignment = 1
 
-[node name="RetractRodsButton" type="Node2D" parent="."]
-position = Vector2(-113, -181)
+[node name="InsertRodsButton" parent="." instance=ExtResource("3_soqm1")]
+position = Vector2(-255, -44)
+shape = SubResource("CircleShape2D_6eqiu")
+script = ExtResource("3_v3onr")
+
+[node name="RetractRodsButton" parent="." instance=ExtResource("3_soqm1")]
+position = Vector2(-111, -112)
+shape = SubResource("CircleShape2D_6eqiu")
 script = ExtResource("4_awkou")
-
-[node name="Area2D" type="Area2D" parent="RetractRodsButton"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RetractRodsButton/Area2D"]
-position = Vector2(4, 62)
-shape = SubResource("CircleShape2D_mvfnu")
-
-[node name="ColorRect" type="ColorRect" parent="RetractRodsButton"]
-offset_left = -24.0
-offset_top = -18.0
-offset_right = 26.0
-offset_bottom = 22.0
-color = Color(0.176471, 0.329412, 1, 1)
-
-[node name="Label" type="Label" parent="RetractRodsButton/ColorRect"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "Retract
-Rods"
-horizontal_alignment = 1

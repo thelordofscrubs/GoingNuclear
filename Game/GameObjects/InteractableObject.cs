@@ -1,14 +1,19 @@
+using GameObjects;
 using Godot;
 
-public partial class InteractableObject : Node2D
+public partial class InteractableObject : CollisionShape2D
 {
     private bool _playerInRange = false;
+    protected NuclearReactor reactor;
+    protected MainGame mainGame;
 
     public override void _Ready()
     {
-        Area2D childArea = GetNode<Area2D>("Area2D");
+        Area2D childArea = GetNode<Area2D>("AreaNode");
         childArea.AreaEntered += OnBodyEntered;
         childArea.AreaExited += OnBodyExited;
+        mainGame = GetNode<MainGame>("../..");
+        reactor = mainGame.Reactor;
     }
 
     private void OnBodyEntered(Node body)

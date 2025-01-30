@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://glt2sm21afo8"]
+
+[ext_resource type="Script" path="res://Game/MainGame/Interactables/Door.cs" id="1_hfry0"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4ukkc"]
+resource_local_to_scene = true
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mf7kc"]
+radius = 19.66
+
+[node name="Door" type="CollisionShape2D"]
+shape = SubResource("CircleShape2D_4ukkc")
+script = ExtResource("1_hfry0")
+
+[node name="AreaNode" type="Area2D" parent="."]
+
+[node name="ShapeNode" type="CollisionShape2D" parent="AreaNode"]
+visible = false
+shape = SubResource("CircleShape2D_mf7kc")

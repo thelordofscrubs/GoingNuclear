@@ -1,0 +1,27 @@
+[gd_scene load_steps=7 format=3 uid="uid://b1c82s6edkvi4"]
+
+[ext_resource type="Texture2D" uid="uid://bnwf1mvtj54lm" path="res://Game/MainGame/ReactorRoom/Background.jpg" id="1_m2olo"]
+[ext_resource type="PackedScene" uid="uid://glt2sm21afo8" path="res://Game/MainGame/Interactables/Door.tscn" id="2_jo5iy"]
+[ext_resource type="PackedScene" uid="uid://b05ji1c6rajf" path="res://Game/MainGame/Interactables/InGameButton.tscn" id="3_km47l"]
+[ext_resource type="Script" path="res://Game/MainGame/ReactorRoom/RefuelButton.cs" id="4_cdqml"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fnc2j"]
+radius = 29.14
+height = 183.12
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gyipg"]
+resource_local_to_scene = true
+radius = 103.6
+
+[node name="ReactorRoom" type="Sprite2D"]
+texture = ExtResource("1_m2olo")
+
+[node name="ControlRoomDoor" parent="." instance=ExtResource("2_jo5iy")]
+position = Vector2(466, 9)
+shape = SubResource("CapsuleShape2D_fnc2j")
+Destination = "ControlRoom"
+DestinationNode = "ReactorRoomDoor"
+
+[node name="RefuelButton" parent="." instance=ExtResource("3_km47l")]
+shape = SubResource("CircleShape2D_gyipg")
+script = ExtResource("4_cdqml")

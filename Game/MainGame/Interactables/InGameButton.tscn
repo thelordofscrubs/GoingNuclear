@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://b05ji1c6rajf"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4ukkc"]
+resource_local_to_scene = true
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mf7kc"]
+radius = 19.66
+
+[node name="InGameButton" type="CollisionShape2D"]
+shape = SubResource("CircleShape2D_4ukkc")
+
+[node name="AreaNode" type="Area2D" parent="."]
+
+[node name="ShapeNode" type="CollisionShape2D" parent="AreaNode"]
+visible = false
+shape = SubResource("CircleShape2D_mf7kc")

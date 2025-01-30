@@ -15,6 +15,7 @@ public partial class MainGame : Node2D
 	public Queue<double> Last5EnergyTicks = new Queue<double>( new double[10]);
 
 	public Dictionary<string, PackedScene> packedScenes = new Dictionary<string, PackedScene>();
+    public Dictionary<string, PackedScene> packedRoomScenes = new Dictionary<string, PackedScene>();
 
 	public DebugLabelManager debugLabels;
 
@@ -36,14 +37,15 @@ public partial class MainGame : Node2D
 		Reactor = new NuclearReactor(meltdown);
 
 		// Load all game scenes into memory
-		packedScenes.Add("ControlRoom", GD.Load<PackedScene>("res://Game/MainGame/ControlRoom/ControlRoom.tscn"));
-		packedScenes.Add("TurbineRoom", GD.Load<PackedScene>("res://Game/MainGame/TurbineRoom/TurbineRoom.tscn"));
+		packedRoomScenes.Add("ControlRoom", GD.Load<PackedScene>("res://Game/MainGame/ControlRoom/ControlRoom.tscn"));
+		packedRoomScenes.Add("TurbineRoom", GD.Load<PackedScene>("res://Game/MainGame/TurbineRoom/TurbineRoom.tscn"));
+        packedRoomScenes.Add("ReactorRoom", GD.Load<PackedScene>("res://Game/MainGame/ReactorRoom/ReactorRoom.tscn"));;
 		packedScenes.Add("Player", GD.Load<PackedScene>("res://Game/MainGame/Player.tscn"));
 		packedScenes.Add("DebugLabels", GD.Load<PackedScene>("res://Game/MainGame/DebugLabels.tscn"));
 		packedScenes.Add("UserInterface", GD.Load<PackedScene>("res://Game/MainGame/UserInterface.tscn"));
 
 		// Start in the control room
-		var controlRoomScene = packedScenes["ControlRoom"].Instantiate();
+		var controlRoomScene = packedRoomScenes["ControlRoom"].Instantiate();
 		AddChild(controlRoomScene);
 		CurrentScene = controlRoomScene;		
 		var playerScene = packedScenes["Player"].Instantiate<Player>();
@@ -65,13 +67,13 @@ public partial class MainGame : Node2D
 	}
 
 	public void SwitchScenes(string newScene, string nodeToTeleportTo = null) {
-		if (!packedScenes.ContainsKey(newScene)) {
+		if (!packedRoomScenes.ContainsKey(newScene)) {
 			GD.PrintErr($"Invalid scene argument in SwitchScenes! {newScene}");
 			return;
 		}
 		
 		if (CurrentScene != null) CurrentScene.QueueFree();
-		var newLoadedScene = packedScenes[newScene].Instantiate();
+		var newLoadedScene = packedRoomScenes[newScene].Instantiate();
 		AddChild(newLoadedScene);
 
 		CurrentScene = newLoadedScene;

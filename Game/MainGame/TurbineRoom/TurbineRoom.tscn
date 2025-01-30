@@ -1,36 +1,28 @@
-[gd_scene load_steps=5 format=3 uid="uid://11w74x51xvjs"]
+[gd_scene load_steps=7 format=3 uid="uid://11w74x51xvjs"]
 
 [ext_resource type="Texture2D" uid="uid://b1pc78tbf82hm" path="res://Game/MainGame/TurbineRoom/BackgroundTemp.webp" id="1_uef7i"]
-[ext_resource type="Script" path="res://Game/MainGame/TurbineRoom/ControlRoomDoor.cs" id="2_54pa4"]
+[ext_resource type="PackedScene" uid="uid://glt2sm21afo8" path="res://Game/MainGame/Interactables/Door.tscn" id="2_1v1wo"]
+[ext_resource type="PackedScene" uid="uid://b05ji1c6rajf" path="res://Game/MainGame/Interactables/InGameButton.tscn" id="3_1eeed"]
 [ext_resource type="Script" path="res://Game/MainGame/TurbineRoom/FixTurbines.cs" id="3_mp0lr"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_mf7kc"]
-radius = 19.66
+[sub_resource type="CircleShape2D" id="CircleShape2D_4kfc4"]
+resource_local_to_scene = true
+radius = 30.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_aelqq"]
+resource_local_to_scene = true
+radius = 29.14
 
 [node name="TurbineRoom" type="Sprite2D"]
 texture = ExtResource("1_uef7i")
 
-[node name="ControlRoomDoor" type="Node2D" parent="."]
-position = Vector2(-406, 51)
-script = ExtResource("2_54pa4")
+[node name="ControlRoomDoor" parent="." instance=ExtResource("2_1v1wo")]
+position = Vector2(-349, 46)
+shape = SubResource("CircleShape2D_4kfc4")
+Destination = "ControlRoom"
+DestinationNode = "TurbineRoomDoor"
 
-[node name="Area2D" type="Area2D" parent="ControlRoomDoor"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ControlRoomDoor/Area2D"]
-shape = SubResource("CircleShape2D_mf7kc")
-
-[node name="ColorRect" type="ColorRect" parent="ControlRoomDoor"]
-offset_left = -19.0
-offset_top = -18.0
-offset_right = 21.0
-offset_bottom = 22.0
-color = Color(0.407843, 1, 1, 1)
-
-[node name="FixTurbines" type="Node2D" parent="."]
-position = Vector2(-228, -74)
+[node name="InGameLever" parent="." instance=ExtResource("3_1eeed")]
+position = Vector2(-230, -73)
+shape = SubResource("CircleShape2D_aelqq")
 script = ExtResource("3_mp0lr")
-
-[node name="Area2D" type="Area2D" parent="FixTurbines"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="FixTurbines/Area2D"]
-shape = SubResource("CircleShape2D_mf7kc")

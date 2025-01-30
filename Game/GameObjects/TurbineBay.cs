@@ -48,7 +48,7 @@ public class TurbineBay {
         // Convert dissipated heat to electrical power, modulated by efficiency
         double powerOutput = heatDissipated * TurbineEfficiency;
 
-        ChangeRepairLevel(-effectiveTemperatureDifference * delta / (10d * 1000));
+        ChangeRepairLevel(-effectiveTemperatureDifference * delta / (100d * 1000));
 
         // Return the power generated in Joules
         return powerOutput;

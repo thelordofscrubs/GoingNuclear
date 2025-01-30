@@ -18,7 +18,7 @@ public class NuclearReactor {
     public int FuelRodCount = 10;
     public int ControlRodCount = 10;
 
-    public double ControlRodDepth = 0.65;
+    public double ControlRodDepth = 0.5;
 
     // 1 is ascending, 0 is stationary, -1 is descending
     public int ControlRodState = 0;
@@ -44,9 +44,20 @@ public class NuclearReactor {
         adjustControlRodPosition(delta);
 
         coolant.FlowSpeed = coolantPumps.CurrentCoolantFlowCapacity;
-        double preMultiplierRads = Math.Pow(2, (FuelRodCount - (ControlRodCount * ControlRodDepth)) * 5);
-        double energyDelta =  preMultiplierRads * delta * FuelFreshness * (1 - ControlRodDepth); 
-        FuelFreshness -= energyDelta / (20d  * 1000 * 1000 * 1000 * 1000);       
+
+        double extremeFactor = 1.5; // Adjust how punishing low insertion is
+
+        // S-curve that steepens at both ends
+        double controlRodEffect = 1 - Math.Pow(Math.Sin(Math.PI * (1-ControlRodDepth) / 2), extremeFactor);
+
+        // Reactor power multiplier based on remaining fuel and rod insertion
+        double reactivityMultiplier = Math.Pow(1.7, (FuelRodCount - (ControlRodCount * controlRodEffect)) * 5);
+        double energyDelta = reactivityMultiplier * delta * FuelFreshness * controlRodEffect; 
+
+
+        // Gradually reduce FuelFreshness without sudden jumps
+        FuelFreshness -= energyDelta / (10d * 1000 * 1000 * 1000 * 1000);
+
         IncreaseCoreEnergy(energyDelta);
         TransferHeatToCoolant(delta);
 
