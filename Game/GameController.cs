@@ -16,19 +16,20 @@ public partial class GameController : Node2D
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
-	{
-		packedScenes.Add("DayStart", GD.Load<PackedScene>("DayStart/DayStart.tscn"));
-		packedScenes.Add("DayEnd", GD.Load<PackedScene>("DayEnd/DayEnd.tscn"));
-		packedScenes.Add("MainGame", GD.Load<PackedScene>("MainGame/MainGame.tscn"));
+	{		
+		packedScenes.Add("DayStart", GD.Load<PackedScene>("res://Game/DayStart/DayStart.tscn"));
+		packedScenes.Add("DayEnd", GD.Load<PackedScene>("res://Game/DayEnd/DayEnd.tscn"));
+		packedScenes.Add("MainGame", GD.Load<PackedScene>("res://Game/MainGame/MainGame.tscn"));
 		CurrentGameScene = packedScenes["DayStart"].Instantiate();
 		AddChild(CurrentGameScene);
+		CurrentGamePhase = GamePhases.DayStart;
 	}
 
 	public void AdvanceGamePhase() {
 		CurrentGameScene.QueueFree();
 		switch (CurrentGamePhase) {
-			case GamePhases.DayStart:
-				CurrentGameScene = packedScenes["MainGame"].Instantiate();
+			case GamePhases.DayStart:				
+				CurrentGameScene = packedScenes["MainGame"].Instantiate();				
 				break;				
 			case GamePhases.MainGame:
 				CurrentGameScene = packedScenes["DayEnd"].Instantiate();
@@ -39,6 +40,7 @@ public partial class GameController : Node2D
 				StartDay();
 				break;			
 		}
+		AddChild(CurrentGameScene);
 	}
 
 	public void EndDay() {
@@ -60,5 +62,6 @@ public partial class GameController : Node2D
 		}
 
 	}
+	
 	
 }

@@ -1,7 +1,9 @@
-public enum EmployeeTypes {
+public enum ItemType {
     TurbineMechanic,
     ControlRoomEngineer,
-    ReactorEngineer
+    ReactorEngineer,
+    FuelCell,
+    Forklift
 }
 
 public enum FuelCellTypes {
