@@ -6,7 +6,7 @@ public enum ItemType {
     Forklift
 }
 
-public enum FuelCellTypes {
+public enum FuelCellType {
     Regular,
     Level2,
     LongLasting,
@@ -14,7 +14,7 @@ public enum FuelCellTypes {
     Safety
 }
 
-public enum PowerPlantStates {    
+public enum PowerPlantState {    
     Dead,
     LowPower,
     Normal,
@@ -36,15 +36,21 @@ public enum RandomEventsDaily {
     ExpensiveHires
 }
 
-public enum RandomEvents {
+public enum RandomEvent {
     NoEvent = -1,
     LightningStrike,
     NeutrinoBurst,
     Sabotage
 }
 
-public enum GamePhases {
-		DayStart,
-		MainGame,
-		DayEnd
-	}
+public enum GamePhase {
+    DayStart,
+    MainGame,
+    DayEnd
+}
+
+public enum DayResult {
+    Success,
+    Meltdown,
+    OutOfTime
+}

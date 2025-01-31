@@ -20,9 +20,9 @@ public class GameStatus {
         return items;
     }
 
-    public double WattHoursGeneratedToday = 0;
-    public double TotalWattHoursGenerated = 0;
-    public double WattHourRequirementToday = 0;
+    public double MegaWattHoursGeneratedToday = 0;
+    public double TotalMegaWattHoursGenerated = 0;
+    public double MegaWattHourRequirementToday = 0;
     public RandomEventsDaily CurrentRandomDaily = RandomEventsDaily.NoEvent;
     
     public bool SpendMoney(double amount) {

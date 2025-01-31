@@ -28,14 +28,9 @@ public partial class MainGame : Node2D
 	public Player PlayerRef;
 	public GameController gameController;
 	public bool MeltdownOccured = false;
-
-	// Seconds, represents minutes
-	public double TimeLeft = 60 * 8;
-	// Megawatt minutes, represents megawatt hours
-	public double EnergyTarget = 1500;
 	// Represents megawatt hours
 	public double EnergyGeneratedMegawattMinutes {get => TotalEnergyGenerated/60;}
-	// Called when the node enters the scene tree for the first time.
+
 	public override void _Ready()
 	{
 		gameController = GetParent<GameController>();
@@ -101,12 +96,18 @@ public partial class MainGame : Node2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		TimeLeft -= delta;
-		if (TimeLeft <= 0) {
+		gameController.TimeLeft -= delta;
+		if (gameController.TimeLeft <= 0) {
+			gameController.dayResult = DayResult.OutOfTime;
 			gameController.AdvanceGamePhase();
 			return;
 		}
-		if (EnergyGeneratedMegawattMinutes >= EnergyTarget) {
+		if (MeltdownOccured) {
+			gameController.dayResult = DayResult.Meltdown;
+			gameController.AdvanceGamePhase();
+		}
+		if (EnergyGeneratedMegawattMinutes >= gameController.EnergyTarget) {
+			gameController.dayResult = DayResult.Success;
 			gameController.AdvanceGamePhase();
 			return;
 		}
@@ -124,8 +125,8 @@ public partial class MainGame : Node2D
 	}
 
 	private void updateLabels() {
-		UiLabels.UpdateLabel("GeneratedLabel", $"Electricity Generated: {EnergyGeneratedMegawattMinutes:F1} / {EnergyTarget:G}");
-		UiLabels.UpdateLabel("TimeLabel", $"Time Left {(int)Math.Floor(TimeLeft/60):D2}:{(int)Math.Floor(TimeLeft % 60):D2}");
+		UiLabels.UpdateLabel("GeneratedLabel", $"Electricity Generated: {EnergyGeneratedMegawattMinutes:F1} / {gameController.EnergyTarget:G}");
+		UiLabels.UpdateLabel("TimeLabel", $"Time Left {(int)Math.Floor(gameController.TimeLeft/60):D2}:{(int)Math.Floor(gameController.TimeLeft % 60):D2}");
 		debugLabels.UpdateLabel("ReactorCoreTempLabel", $"Reactor Core Temperature: {Reactor.CoreTemperature - 273.15:F2} Degrees Celsius");		
 		debugLabels.UpdateLabel("CoolantTempLabel", $"Coolant Temperature: {Reactor.coolant.Temperature - 273.15:F2} Degrees Celsius");
 		debugLabels.UpdateLabel("WattageLabel", $"Current Generation: {CurrentWattage/1000000:F2} Megawatts");

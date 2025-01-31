@@ -7,12 +7,21 @@ public partial class GameController : Node2D
 {
 	public Action EndGame = () => {};
 	public Dictionary<string, PackedScene> packedScenes = new Dictionary<string, PackedScene>();	
-	public GamePhases CurrentGamePhase = GamePhases.DayStart;
+	public GamePhase CurrentGamePhase = GamePhase.DayStart;
 	public Node CurrentGameScene;
+	public MainGame mainGame;
+	public DayEnd dayEnd;
 	public GameStatus GameStats = new GameStatus();	
 
 	public double ChanceForDailyEvent = 0.5;
-	
+
+	// Seconds, represents minutes
+	public double TimePerDay = 8 * 60;
+	public double TimeLeft = 8 * 60;
+	// Megawatt minutes, represents megawatt hours
+	public double EnergyTarget = 1500;
+
+	public DayResult dayResult;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -22,24 +31,29 @@ public partial class GameController : Node2D
 		packedScenes.Add("MainGame", GD.Load<PackedScene>("res://Game/MainGame/MainGame.tscn"));
 		CurrentGameScene = packedScenes["DayStart"].Instantiate();
 		AddChild(CurrentGameScene);
-		CurrentGamePhase = GamePhases.DayStart;
+		CurrentGamePhase = GamePhase.DayStart;
 	}
 
 	public void AdvanceGamePhase() {
-		CurrentGameScene.QueueFree();
 		switch (CurrentGamePhase) {
-			case GamePhases.DayStart:				
+			case GamePhase.DayStart:		
+				CurrentGameScene.QueueFree();		
 				CurrentGameScene = packedScenes["MainGame"].Instantiate();
-				CurrentGamePhase = GamePhases.MainGame;
+				mainGame = (MainGame)CurrentGameScene;
+				CurrentGamePhase = GamePhase.MainGame;
 				break;				
-			case GamePhases.MainGame:
+			case GamePhase.MainGame:
 				CurrentGameScene = packedScenes["DayEnd"].Instantiate();
-				CurrentGamePhase = GamePhases.DayEnd;
+				dayEnd = (DayEnd)CurrentGameScene;
+				dayEnd.GetNode<Button>("VBoxContainer/NextDayButton").Pressed += AdvanceGamePhase;
+				CurrentGamePhase = GamePhase.DayEnd;
 				EndDay();
 				break;
-			case GamePhases.DayEnd:
+			case GamePhase.DayEnd:
+				mainGame.QueueFree();
+				CurrentGameScene.QueueFree();
 				CurrentGameScene = packedScenes["DayStart"].Instantiate();
-				CurrentGamePhase = GamePhases.DayStart;
+				CurrentGamePhase = GamePhase.DayStart;
 				StartDay();
 				break;			
 		}
@@ -47,12 +61,12 @@ public partial class GameController : Node2D
 	}
 
 	public void EndDay() {
-		
+		mainGame.SetProcess(false);
 	}
 
 	public void StartDay() {
 		GameStats.CurrentDay++;
-		GameStats.WattHoursGeneratedToday = 0;
+		GameStats.MegaWattHoursGeneratedToday = 0;
 
 		// Decide random event for the day
 		Random rand = new Random();

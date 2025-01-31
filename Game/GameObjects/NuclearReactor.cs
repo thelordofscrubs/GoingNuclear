@@ -111,7 +111,7 @@ public class NuclearReactor {
 
     private void adjustControlRodPosition (double delta) {
         if (ControlRodState != 0) {
-            ControlRodDepth = Math.Clamp(ControlRodDepth + 0.01 * delta * ControlRodState, 0, 1.0);
+            ControlRodDepth = Math.Clamp(ControlRodDepth + 0.02 * delta * ControlRodState, 0, 1.0);
         }
     }
 

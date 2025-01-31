@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://11w74x51xvjs"]
 
-[ext_resource type="Texture2D" uid="uid://b1pc78tbf82hm" path="res://Game/MainGame/TurbineRoom/BackgroundTemp.webp" id="1_uef7i"]
+[ext_resource type="Texture2D" uid="uid://bdvdmqvmwyqxg" path="res://Game/MainGame/TurbineRoom/Background.png" id="1_xli07"]
 [ext_resource type="PackedScene" uid="uid://glt2sm21afo8" path="res://Game/MainGame/Interactables/Door.tscn" id="2_1v1wo"]
 [ext_resource type="PackedScene" uid="uid://b05ji1c6rajf" path="res://Game/MainGame/Interactables/InGameButton.tscn" id="3_1eeed"]
 [ext_resource type="Script" path="res://Game/MainGame/TurbineRoom/FixTurbines.cs" id="3_mp0lr"]
@@ -14,7 +14,7 @@ resource_local_to_scene = true
 radius = 29.14
 
 [node name="TurbineRoom" type="Sprite2D"]
-texture = ExtResource("1_uef7i")
+texture = ExtResource("1_xli07")
 
 [node name="ControlRoomDoor" parent="." instance=ExtResource("2_1v1wo")]
 position = Vector2(-349, 46)

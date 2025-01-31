@@ -3,7 +3,7 @@ using System;
 
 namespace GameObjects;
 public class FuelCell {
-    public FuelCellTypes Type;
+    public FuelCellType Type;
     public double FuelLevel = 1.0;
 
     // fraction degraded per second in use
@@ -26,9 +26,9 @@ public class FuelCell {
 
     public bool CurrentlyInserted = false;
 
-    public FuelCell(FuelCellTypes type) {
+    public FuelCell(FuelCellType type) {
         Type = type;
-        if (type == FuelCellTypes.LongLasting) {
+        if (type == FuelCellType.LongLasting) {
             FlatDegradationSpeed = 0.0005;
             DegradationPerMegajoule = .00001;
         }
