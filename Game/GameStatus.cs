@@ -22,7 +22,12 @@ public class GameStatus {
 
     public double MegaWattHoursGeneratedToday = 0;
     public double TotalMegaWattHoursGenerated = 0;
-    public double MegaWattHourRequirementToday = 0;
+    public double MegaWattHourRequirementToday = 1000;
+    public double BaseMegaWattHourRequirement = 1000;
+    public double TimeLeftInDay = 4 * 60;
+    public double TimePerDay = 4 * 60;
+    public double TimeSavedTotal = 0;
+    public double GameScore {get => TotalMegaWattHoursGenerated + TimeSavedTotal * 5;}
     public RandomEventsDaily CurrentRandomDaily = RandomEventsDaily.NoEvent;
     
     public bool SpendMoney(double amount) {

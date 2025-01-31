@@ -6,6 +6,8 @@ public partial class InteractableObject : CollisionShape2D
     private bool _playerInRange = false;
     protected NuclearReactor reactor;
     protected MainGame mainGame;
+    CollisionShape2D collisionShape;
+    
 
     public override void _Ready()
     {
@@ -14,8 +16,9 @@ public partial class InteractableObject : CollisionShape2D
         childArea.AreaExited += OnBodyExited;
         mainGame = GetNode<MainGame>("../..");
         reactor = mainGame.Reactor;
+        collisionShape = GetNode<CollisionShape2D>("AreaNode/ShapeNode");
+        collisionShape.Shape = Shape;
     }
-
     private void OnBodyEntered(Node body)
     {
         if (body.Name == "PlayerCollision")

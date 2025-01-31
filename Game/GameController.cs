@@ -15,12 +15,6 @@ public partial class GameController : Node2D
 
 	public double ChanceForDailyEvent = 0.5;
 
-	// Seconds, represents minutes
-	public double TimePerDay = 8 * 60;
-	public double TimeLeft = 8 * 60;
-	// Megawatt minutes, represents megawatt hours
-	public double EnergyTarget = 1500;
-
 	public DayResult dayResult;
 
 	// Called when the node enters the scene tree for the first time.
@@ -43,11 +37,10 @@ public partial class GameController : Node2D
 				CurrentGamePhase = GamePhase.MainGame;
 				break;				
 			case GamePhase.MainGame:
-				CurrentGameScene = packedScenes["DayEnd"].Instantiate();
-				dayEnd = (DayEnd)CurrentGameScene;
-				dayEnd.GetNode<Button>("VBoxContainer/NextDayButton").Pressed += AdvanceGamePhase;
-				CurrentGamePhase = GamePhase.DayEnd;
 				EndDay();
+                CurrentGameScene = packedScenes["DayEnd"].Instantiate();				
+                dayEnd = (DayEnd)CurrentGameScene;				
+				CurrentGamePhase = GamePhase.DayEnd;				
 				break;
 			case GamePhase.DayEnd:
 				mainGame.QueueFree();
@@ -61,12 +54,20 @@ public partial class GameController : Node2D
 	}
 
 	public void EndDay() {
+        // Pause main game scene
 		mainGame.SetProcess(false);
+        // Only add to score if successful
+        if (dayResult == DayResult.Success) {
+            GameStats.TimeSavedTotal += GameStats.TimeLeftInDay;        
+            GameStats.TotalMegaWattHoursGenerated += GameStats.MegaWattHoursGeneratedToday;
+        }
 	}
 
 	public void StartDay() {
 		GameStats.CurrentDay++;
 		GameStats.MegaWattHoursGeneratedToday = 0;
+        GameStats.MegaWattHourRequirementToday = GameStats.BaseMegaWattHourRequirement + 100 * Math.Pow(2, GameStats.CurrentDay);
+        GameStats.TimeLeftInDay = GameStats.TimePerDay;
 
 		// Decide random event for the day
 		Random rand = new Random();

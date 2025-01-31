@@ -10,9 +10,6 @@ public partial class MainGame : Node2D
 {
 	public NuclearReactor Reactor;
 
-	// Megajoules
-	public double TotalEnergyGenerated = 0;
-
 	public double CurrentWattage = 0;
 
 	public Dictionary<string, PackedScene> packedScenes = new Dictionary<string, PackedScene>();
@@ -28,8 +25,6 @@ public partial class MainGame : Node2D
 	public Player PlayerRef;
 	public GameController gameController;
 	public bool MeltdownOccured = false;
-	// Represents megawatt hours
-	public double EnergyGeneratedMegawattMinutes {get => TotalEnergyGenerated/60;}
 
 	public override void _Ready()
 	{
@@ -96,8 +91,8 @@ public partial class MainGame : Node2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		gameController.TimeLeft -= delta;
-		if (gameController.TimeLeft <= 0) {
+		gameController.GameStats.TimeLeftInDay -= delta;
+		if (gameController.GameStats.TimeLeftInDay <= 0) {
 			gameController.dayResult = DayResult.OutOfTime;
 			gameController.AdvanceGamePhase();
 			return;
@@ -106,7 +101,7 @@ public partial class MainGame : Node2D
 			gameController.dayResult = DayResult.Meltdown;
 			gameController.AdvanceGamePhase();
 		}
-		if (EnergyGeneratedMegawattMinutes >= gameController.EnergyTarget) {
+		if (gameController.GameStats.MegaWattHoursGeneratedToday >= gameController.GameStats.MegaWattHourRequirementToday) {
 			gameController.dayResult = DayResult.Success;
 			gameController.AdvanceGamePhase();
 			return;
@@ -114,7 +109,8 @@ public partial class MainGame : Node2D
 
 		Reactor.Degrade(delta);
 		double energyGenerated = Reactor.GameTick(delta);
-		TotalEnergyGenerated += energyGenerated / 1e6;
+        double megawattHours = energyGenerated / 1e6 / 60;
+		gameController.GameStats.MegaWattHoursGeneratedToday += megawattHours;        
 		CurrentWattage = energyGenerated / delta;
 		
 		updateLabels();
@@ -125,8 +121,8 @@ public partial class MainGame : Node2D
 	}
 
 	private void updateLabels() {
-		UiLabels.UpdateLabel("GeneratedLabel", $"Electricity Generated: {EnergyGeneratedMegawattMinutes:F1} / {gameController.EnergyTarget:G}");
-		UiLabels.UpdateLabel("TimeLabel", $"Time Left {(int)Math.Floor(gameController.TimeLeft/60):D2}:{(int)Math.Floor(gameController.TimeLeft % 60):D2}");
+		UiLabels.UpdateLabel("GeneratedLabel", $"Electricity Generated: {gameController.GameStats.MegaWattHoursGeneratedToday:F1} / {gameController.GameStats.MegaWattHourRequirementToday:G}");
+		UiLabels.UpdateLabel("TimeLabel", $"Time Left {(int)Math.Floor(gameController.GameStats.TimeLeftInDay/60):D2}:{(int)Math.Floor(gameController.GameStats.TimeLeftInDay % 60):D2}");
 		debugLabels.UpdateLabel("ReactorCoreTempLabel", $"Reactor Core Temperature: {Reactor.CoreTemperature - 273.15:F2} Degrees Celsius");		
 		debugLabels.UpdateLabel("CoolantTempLabel", $"Coolant Temperature: {Reactor.coolant.Temperature - 273.15:F2} Degrees Celsius");
 		debugLabels.UpdateLabel("WattageLabel", $"Current Generation: {CurrentWattage/1000000:F2} Megawatts");
