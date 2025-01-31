@@ -10,30 +10,35 @@ public partial class MainGame : Node2D
 {
 	public NuclearReactor Reactor;
 
+	// Megajoules
 	public double TotalEnergyGenerated = 0;
 
-	public Queue<double> Last5EnergyTicks = new Queue<double>( new double[10]);
+	public double CurrentWattage = 0;
 
 	public Dictionary<string, PackedScene> packedScenes = new Dictionary<string, PackedScene>();
     public Dictionary<string, PackedScene> packedRoomScenes = new Dictionary<string, PackedScene>();
 
-	public DebugLabelManager debugLabels;
+	public LabelManager debugLabels;
+	public LabelManager UiLabels;
 
 	public Button RaiseControlRodsButton;
 	public Button LowerControlRodsButton;	
 
 	public Node CurrentScene;
 	public Player PlayerRef;
+	public GameController gameController;
 	public bool MeltdownOccured = false;
 
-	public double DisplayWattage() {
-		if (Last5EnergyTicks.Count == 0) return 0;
-		return Last5EnergyTicks.Sum()/Last5EnergyTicks.Count; 
-	}
-
+	// Seconds, represents minutes
+	public double TimeLeft = 60 * 8;
+	// Megawatt minutes, represents megawatt hours
+	public double EnergyTarget = 1500;
+	// Represents megawatt hours
+	public double EnergyGeneratedMegawattMinutes {get => TotalEnergyGenerated/60;}
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		gameController = GetParent<GameController>();
 		Reactor = new NuclearReactor(meltdown);
 
 		// Load all game scenes into memory
@@ -60,11 +65,20 @@ public partial class MainGame : Node2D
 		PlayerRef.UserInterfaceNode = uiScene;
 		
 		
-		debugLabels = new DebugLabelManager(GetNode("DebugLabels"));
+		debugLabels = new LabelManager(GetNode("DebugLabels"));
+		UiLabels = new LabelManager(GetNode("UserInterface"));
 
 		GD.Print("Main Game script is ready");
 		
 	}
+
+	public override void _Input(InputEvent @event)
+    {
+        if (@event.IsActionPressed("dev_mode")) {
+			GD.Print("God mode");
+			
+		}
+    }
 
 	public void SwitchScenes(string newScene, string nodeToTeleportTo = null) {
 		if (!packedRoomScenes.ContainsKey(newScene)) {
@@ -87,27 +101,38 @@ public partial class MainGame : Node2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		gameTick(delta);
+		TimeLeft -= delta;
+		if (TimeLeft <= 0) {
+			gameController.AdvanceGamePhase();
+			return;
+		}
+		if (EnergyGeneratedMegawattMinutes >= EnergyTarget) {
+			gameController.AdvanceGamePhase();
+			return;
+		}
+
+		Reactor.Degrade(delta);
+		double energyGenerated = Reactor.GameTick(delta);
+		TotalEnergyGenerated += energyGenerated / 1e6;
+		CurrentWattage = energyGenerated / delta;
+		
+		updateLabels();
 	}
 
 	private void meltdown() {
 		MeltdownOccured = true;
 	}
 
-	// Called in _Process as a high level game loop function
-	private void gameTick(double delta) {
-		Reactor.Degrade(delta);
-		double energyGenerated = Reactor.GameTick(delta);
-		TotalEnergyGenerated += energyGenerated;
-
-		// Set label values
-		debugLabels.UpdateLabel("ReactorCoreTempLabel", $"Reactor Core Temperature: {Reactor.CoreTemperature - 273.15:F4} Degrees Celsius");		
-		debugLabels.UpdateLabel("CoolantTempLabel", $"Coolant Temperature: {Reactor.coolant.Temperature - 273.15:F4} Degrees Celsius");
-		debugLabels.UpdateLabel("WattageLabel", $"Current Generation: {energyGenerated/delta/1000000:F3} Megawatts");
+	private void updateLabels() {
+		UiLabels.UpdateLabel("GeneratedLabel", $"Electricity Generated: {EnergyGeneratedMegawattMinutes:F1} / {EnergyTarget:G}");
+		UiLabels.UpdateLabel("TimeLabel", $"Time Left {(int)Math.Floor(TimeLeft/60):D2}:{(int)Math.Floor(TimeLeft % 60):D2}");
+		debugLabels.UpdateLabel("ReactorCoreTempLabel", $"Reactor Core Temperature: {Reactor.CoreTemperature - 273.15:F2} Degrees Celsius");		
+		debugLabels.UpdateLabel("CoolantTempLabel", $"Coolant Temperature: {Reactor.coolant.Temperature - 273.15:F2} Degrees Celsius");
+		debugLabels.UpdateLabel("WattageLabel", $"Current Generation: {CurrentWattage/1000000:F2} Megawatts");
 		debugLabels.UpdateLabel("FuelLevelLabel", $"Fuel Level: {Reactor.FuelFreshness:P}");
 		debugLabels.UpdateLabel("ControlRodDepthLabel", $"Control Rod Depth: {Reactor.ControlRodDepth:P}");
 		debugLabels.UpdateLabel("TurbineRepairLabel", $"Turbine Repair Level: {Reactor.turbineBay.RepairLevel:P}");
-		debugLabels.UpdateLabel("RunCooldownLabel", $"Run Cooldown: {PlayerRef.RunCooldown:F2}");
+		debugLabels.UpdateLabel("RunCooldownLabel", $"Run Cooldown: {PlayerRef.RunCooldown:F1}");
 	}
 
 }

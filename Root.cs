@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class Root2d : Node2D
+public partial class Root : Node2D
 {
 	PackedScene mainMenuScenePacked;
 	PackedScene gameControllerScenePacked;
@@ -18,11 +18,11 @@ public partial class Root2d : Node2D
 	}
 
 	public void GoToMainMenu() {
-		var mainMenuScene = mainMenuScenePacked.Instantiate<Control>();
+		var mainMenuScene = mainMenuScenePacked.Instantiate<CanvasLayer>();
 		AddChild(mainMenuScene);
-		Button playButton = GetNode<Button>("MainMenu/PlayButton");
+		Button playButton = GetNode<Button>("MainMenu/MarginContainer/VBoxContainer/PlayButton");
 		playButton.Pressed += StartGame;
-		Button quitButton = GetNode<Button>("MainMenu/QuitButton");
+		Button quitButton = GetNode<Button>("MainMenu/MarginContainer/VBoxContainer/QuitButton");
 		quitButton.Pressed += QuitApplication;
 	}
 

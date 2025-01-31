@@ -12,10 +12,14 @@ public partial class Player : AnimatedSprite2D
 	public float RunSpeedMultiplier = 2f;
 	public double RunCooldown = 0.0;
 	public bool CurrentlyRunning = false;
+	public ProgressBar staminaBar;
 
 	public void ChangeRunEnergy(double changeAmount) {
 		RunEnergy = Math.Clamp(RunEnergy + changeAmount, 0.0, 1.0);
-		UserInterfaceNode.GetNode<ProgressBar>("Control/VBoxContainer/ProgressBar").Value = RunEnergy;
+		if (staminaBar == null) {
+			staminaBar = UserInterfaceNode.GetNode<ProgressBar>("Control/MarginContainer/VBoxContainer/ProgressBar");
+		}
+		staminaBar.Value = RunEnergy;
 	}
 
 	public Node UserInterfaceNode;

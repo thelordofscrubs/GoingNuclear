@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://b6tsccx01k0ht"]
+[gd_scene load_steps=9 format=3 uid="uid://b6tsccx01k0ht"]
 
 [ext_resource type="Texture2D" uid="uid://qxjk7l6oh0p6" path="res://Game/MainGame/ControlRoom/Background.png" id="1_c8vd4"]
 [ext_resource type="PackedScene" uid="uid://b05ji1c6rajf" path="res://Game/MainGame/Interactables/InGameButton.tscn" id="3_soqm1"]
@@ -11,6 +11,10 @@ radius = 29.14
 height = 259.25
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6eqiu"]
+resource_local_to_scene = true
+radius = 29.3
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_33uha"]
 resource_local_to_scene = true
 radius = 29.3
 
@@ -69,5 +73,5 @@ script = ExtResource("3_v3onr")
 
 [node name="RetractRodsButton" parent="." instance=ExtResource("3_soqm1")]
 position = Vector2(-111, -112)
-shape = SubResource("CircleShape2D_6eqiu")
+shape = SubResource("CircleShape2D_33uha")
 script = ExtResource("4_awkou")

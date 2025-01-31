@@ -29,14 +29,17 @@ public partial class GameController : Node2D
 		CurrentGameScene.QueueFree();
 		switch (CurrentGamePhase) {
 			case GamePhases.DayStart:				
-				CurrentGameScene = packedScenes["MainGame"].Instantiate();				
+				CurrentGameScene = packedScenes["MainGame"].Instantiate();
+				CurrentGamePhase = GamePhases.MainGame;
 				break;				
 			case GamePhases.MainGame:
 				CurrentGameScene = packedScenes["DayEnd"].Instantiate();
+				CurrentGamePhase = GamePhases.DayEnd;
 				EndDay();
 				break;
 			case GamePhases.DayEnd:
 				CurrentGameScene = packedScenes["DayStart"].Instantiate();
+				CurrentGamePhase = GamePhases.DayStart;
 				StartDay();
 				break;			
 		}

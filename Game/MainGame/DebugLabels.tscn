@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://c6e20bc7mbke"]
+[gd_scene format=3 uid="uid://cy0y4e3fk85tt"]
 
 [node name="DebugLabels" type="CanvasLayer"]
 layer = 10

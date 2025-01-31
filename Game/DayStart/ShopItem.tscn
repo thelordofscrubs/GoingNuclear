@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://bl8pw4co12nks"]
+[gd_scene format=3 uid="uid://op7tgqa7x7a2"]
 
 [node name="ShopItem" type="MarginContainer"]
 anchors_preset = 8
